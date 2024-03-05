@@ -77,12 +77,12 @@ app.get('/Filtrado', async (req, resp) => {
 })
 
 
-app.get('/Filtrado', async (req, resp) => {
-    const { Nombre } = req.query;
+app.post('/ModificarCurso', async (req, resp) => {
+    const { Curso, ID } = req.query;
     const conex = await connectDB();
-    const sql = 'SELECT * FROM Alumnado WHERE Nombre = ?';
+    const sql = 'UPDATE Alumnado SET Curso = ? WHERE ID = ? ';
 
-    const [results] = await conex.query(sql, [Nombre]);
+    const [results] = await conex.query(sql, [Curso, ID]);
     
     conex.end();
     resp.json(results);
@@ -91,13 +91,12 @@ app.get('/Filtrado', async (req, resp) => {
 
 
 app.get('/Borrado', async (req, resp) => {
-    const { Curso } = req.query;
+    const { ID } = req.query;
     const conex = await connectDB();
-    const sql = 'DELETE FROM Alumnado WHERE Curso = ?';
+    const sql = 'DELETE FROM Alumnado WHERE ID = ?';
 
-    const [results] = await conex.query(sql, [Curso]);
+    const [results] = await conex.query(sql, [ID]);
     
     conex.end();
     resp.json(results);
-
 })
