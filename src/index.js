@@ -12,13 +12,13 @@ app.listen(serverPort, () => {
   console.log(`http://localhost:${serverPort}`);
 });
 
-//CONECTAR CON BASE DE DATOS:
+
 
 const connectDB = async () => {
   const conex = await mysql.createConnection({
     host: "localhost",
-    user: "root",
-    password: "root12345678",
+    user: process.env.USER_DB,
+    password: process.env.USER_PASS,
     database: "Evaluacion",
   });
   await conex.connect();
@@ -44,6 +44,60 @@ app.post('/Alumnado', async (req, resp) => {
     conex.end();
 
     resp.json({
-        result: results
+        id: results.insertId, message: 'se ha insertado'
     });
 });
+
+
+
+app.get('/TodoAlumnado', async (req, resp) => {
+    const conex = await connectDB();
+    const sql = 'SELECT * FROM Alumnado';
+
+    const [results, fields] = await conex.query(sql);
+    
+    conex.end();
+    resp.json({
+        success: true,
+        data: results,
+    })
+})
+
+
+app.get('/Filtrado', async (req, resp) => {
+    const { Nombre } = req.query;
+    const conex = await connectDB();
+    const sql = 'SELECT * FROM Alumnado WHERE Nombre = ?';
+
+    const [results] = await conex.query(sql, [Nombre]);
+    
+    conex.end();
+    resp.json(results);
+
+})
+
+
+app.get('/Filtrado', async (req, resp) => {
+    const { Nombre } = req.query;
+    const conex = await connectDB();
+    const sql = 'SELECT * FROM Alumnado WHERE Nombre = ?';
+
+    const [results] = await conex.query(sql, [Nombre]);
+    
+    conex.end();
+    resp.json(results);
+
+})
+
+
+app.get('/Borrado', async (req, resp) => {
+    const { Curso } = req.query;
+    const conex = await connectDB();
+    const sql = 'DELETE FROM Alumnado WHERE Curso = ?';
+
+    const [results] = await conex.query(sql, [Curso]);
+    
+    conex.end();
+    resp.json(results);
+
+})
