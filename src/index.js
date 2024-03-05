@@ -27,3 +27,23 @@ const connectDB = async () => {
 };
 
 connectDB();
+
+app.post('/Alumnado', async (req, resp) => {
+    const sql = 
+    'INSERT INTO Alumnado (Nombre, Edad, Curso) VALUES (?,?,?)';
+
+    const conex = await connectDB();
+
+    const [results] = await conex.query(sql, [
+        req.body.Nombre,
+        req.body.Edad,
+        req.body.Curso,
+    ]);
+
+    console.log(results);
+    conex.end();
+
+    resp.json({
+        result: results
+    });
+});
